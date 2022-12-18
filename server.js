@@ -1,24 +1,44 @@
+// import { authenticateUser } type='module' from "./database";
+
 console.log("Node started");
 
 const express = require("express");
 const app = express();
+const mysql = require("mysql");
 const bodyParser = require("body-parser");
+
+const { createConnection } = require("mysql");
+
+const connection = createConnection({
+  host: "localhost",
+  user: "Kumar",
+  password: "Kumar@2003",
+  database: "test_db",
+});
+
+var database_connections_status = "";
+
+connection.connect((err) => {
+  if (err) {
+    console.log("Error connecting to Db");
+    database_connections_status = "<h1>Error connecting to Db</h1>";
+    return;
+  }
+  console.log("Connection established");
+  database_connections_status = "<h1>Connection established</h1>";
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/login.html");
+  // res.sendFile(__dirname + "/login.html");
+  res.send(database_connections_status);
 });
 
 app.post("/server.js", (req, res) => {
   var user = req.body.user;
   var pswd = req.body.pswd;
-  if (user == "kumar" && pswd == "1234") {
-    res.send("<h1>Login Successful </h1> <a href='/'>Go back</a>");
-  } else {
-    res.send("<h1>Login Failed </h1> <a href='/'>Go back</a>");
-  }
 });
 
 app.listen(3000, () => {
